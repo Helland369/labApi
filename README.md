@@ -2,6 +2,12 @@
 
 Dette er den ferdige eksempelappen til Uke 3-labben om **ASP.NET Core på Linux, PostgreSQL, `systemd` og `nginx`**.
 
+## Repo-kontekst
+
+Dette prosjektet er en del av backend-kurset.
+
+Merk at parent-mappen over denne (`GET`) ligger i et annet repo. Denne mappen (`labApi`) er derfor publisert som et eget, separat repository for labben.
+
 ## Hva appen gjør
 
 Appen er bevisst liten og enkel:
