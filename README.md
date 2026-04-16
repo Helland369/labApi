@@ -5,6 +5,7 @@ Dette er den ferdige eksempelappen til Uke 3-labben om **ASP.NET Core på Linux,
 ## Repo-kontekst
 
 Dette prosjektet er en del av backend-kurset.
+Kursets hovedrepo er: https://github.com/GetAcademy/Backend2026.1
 
 Merk at parent-mappen over denne (`GET`) ligger i et annet repo. Denne mappen (`labApi`) er derfor publisert som et eget, separat repository for labben.
 
@@ -228,3 +229,62 @@ Hvis du vil holde fokus på drift/deployment, bruk dette opplegget:
 5. **Deploy med `systemd` og `nginx`**
 
 Det holder tempoet oppe og gjør at studentene bruker tiden på riktig ting.
+
+---
+
+## 11. Cattle-VM med Vagrant + VirtualBox (Windows-vennlig)
+
+Hvis målet er at studentene skal behandle VM-er som "cattle" (ikke "pets"),
+er Vagrant + VirtualBox et mer stabilt opplegg enn Terraform + alpha-provider for VirtualBox.
+
+### Krav på host-maskinen
+
+- VirtualBox
+- Vagrant
+
+### Standard oppstart (Docker i VM)
+
+```bash
+vagrant up
+vagrant ssh
+cd /vagrant
+docker --version
+docker compose version
+```
+
+### Podman i stedet for Docker
+
+```bash
+CONTAINER_RUNTIME=podman vagrant up
+vagrant ssh
+podman --version
+```
+
+### Installer begge runtimes
+
+```bash
+CONTAINER_RUNTIME=both vagrant up
+```
+
+### Rebuild fra scratch (cattle-test)
+
+```bash
+vagrant destroy -f
+vagrant up
+```
+
+### Valgfri bridged NIC
+
+NAT brukes som standard for kompatibilitet på tvers av Windows/macOS/Linux.
+Hvis du trenger bridged nettverk i tillegg, sett host-adapter før oppstart:
+
+```bash
+BRIDGE_ADAPTER="Intel(R) Ethernet Connection" vagrant up
+```
+
+På Linux kan adapter-navn ofte være `eno1`, `eth0` eller lignende.
+
+### Relevante filer
+
+- `Vagrantfile`
+- `scripts/provision.sh`
