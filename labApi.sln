@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabApi", "LabApi.csproj", "{83D70992-5F5C-B99A-1014-C23B84B3DD31}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabApi", "src/LabApi/LabApi.csproj", "{83D70992-5F5C-B99A-1014-C23B84B3DD31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -61,7 +61,7 @@ apt-get install -y jq unzip
 
 cat >/etc/motd <<'EOF'
 Lab cattle VM is ready.
-- Repo sync path: /vagrant
+- Repo sync path: /workspace
 - Container runtime: set by CONTAINER_RUNTIME in Vagrantfile/env
 - Recreate VM anytime: vagrant destroy -f && vagrant up
 EOF

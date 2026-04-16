@@ -10,6 +10,8 @@ BRIDGE_ADAPTER = ENV["BRIDGE_ADAPTER"]
 Vagrant.configure("2") do |config|
   config.vm.box = VM_BOX
   config.vm.hostname = "lab-cattle"
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.synced_folder "../..", "/workspace"
 
   # Keep NAT for reliable internet and predictable behavior across host OSes.
   # Optional bridged NIC can be enabled by setting BRIDGE_ADAPTER.
@@ -28,7 +30,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision "shell",
-    path: "scripts/provision.sh",
+    path: "provision.sh",
     env: {
       "CONTAINER_RUNTIME" => CONTAINER_RUNTIME
     }

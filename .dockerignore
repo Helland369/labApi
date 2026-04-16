@@ -1,6 +1,11 @@
-bin/
-obj/
+**/bin/
+**/obj/
 .git/
 .vs/
 publish/
-*.env
+.env
+infra/terraform/
+infra/vagrant/.vagrant/
+terraform.tfstate
+terraform.tfstate.backup
+vagrant.box

@@ -9,6 +9,13 @@ Kursets hovedrepo er: https://github.com/GetAcademy/Backend2026.1
 
 Merk at parent-mappen over denne (`GET`) ligger i et annet repo. Denne mappen (`labApi`) er derfor publisert som et eget, separat repository for labben.
 
+## Struktur
+
+- `src/LabApi` – ASP.NET Core-applikasjonen
+- `infra/docker` – container-build og compose
+- `infra/vagrant` – cattle-VM for studenter
+- `infra/terraform` – Terraform-eksperimenter/oppsett
+
 ## Hva appen gjør
 
 Appen er bevisst liten og enkel:
@@ -51,8 +58,8 @@ Du skal se `10.0.x`.
 ## 3. Hent pakker og bygg prosjektet
 
 ```bash
-dotnet restore
-dotnet build
+dotnet restore ./labApi.sln
+dotnet build ./labApi.sln
 ```
 
 ---
@@ -61,11 +68,11 @@ dotnet build
 
 Åpne disse filene i denne rekkefølgen:
 
-1. `Program.cs` – oppsett av appen, routing og databasekobling
-2. `Models/Product.cs` – den enkle domenemodellen
-3. `Data/AppDbContext.cs` – Entity Framework-koblingen
-4. `Controllers/ProductsController.cs` – API-endepunktene
-5. `appsettings.json` – connection string til PostgreSQL
+1. `src/LabApi/Program.cs` – oppsett av appen, routing og databasekobling
+2. `src/LabApi/Models/Product.cs` – den enkle domenemodellen
+3. `src/LabApi/Data/AppDbContext.cs` – Entity Framework-koblingen
+4. `src/LabApi/Controllers/ProductsController.cs` – API-endepunktene
+5. `src/LabApi/appsettings.json` – connection string til PostgreSQL
 
 > Tips: Hvis du vil live-kode noe, legg til et ekstra felt eller endre responsen på `/health`.
 
@@ -111,13 +118,13 @@ dotnet tool update --global dotnet-ef
 Hvis migrasjonen ikke allerede finnes:
 
 ```bash
-dotnet ef migrations add InitialCreate
+dotnet ef migrations add InitialCreate --project src/LabApi/LabApi.csproj
 ```
 
 Opprett tabellen i databasen:
 
 ```bash
-dotnet ef database update
+dotnet ef database update --project src/LabApi/LabApi.csproj
 ```
 
 Verifiser at tabellen finnes:
@@ -131,7 +138,7 @@ sudo -u postgres psql labapp -c "\dt"
 ## 7. Start appen lokalt
 
 ```bash
-dotnet run
+dotnet run --project src/LabApi/LabApi.csproj
 ```
 
 Appen kjører på:
@@ -171,7 +178,7 @@ curl http://localhost:5000/api/products
 Først publiserer du appen på laptopen din:
 
 ```bash
-dotnet publish -c Release -o ./publish
+dotnet publish ./src/LabApi/LabApi.csproj -c Release -o ./publish
 ls -la ./publish/
 ```
 
@@ -208,13 +215,13 @@ For denne labben er `scp` eller `rsync` helt fint. Men et Git-repo er ofte bedre
 
 ## 10. Nyttige filer i denne mappen
 
-- `LabApi.csproj`
-- `Program.cs`
-- `Models/Product.cs`
-- `Data/AppDbContext.cs`
-- `Controllers/ProductsController.cs`
-- `appsettings.json`
-- `LabApi.http`
+- `src/LabApi/LabApi.csproj`
+- `src/LabApi/Program.cs`
+- `src/LabApi/Models/Product.cs`
+- `src/LabApi/Data/AppDbContext.cs`
+- `src/LabApi/Controllers/ProductsController.cs`
+- `src/LabApi/appsettings.json`
+- `src/LabApi/LabApi.http`
 
 ---
 
@@ -222,7 +229,7 @@ For denne labben er `scp` eller `rsync` helt fint. Men et Git-repo er ofte bedre
 
 Hvis du vil holde fokus på drift/deployment, bruk dette opplegget:
 
-1. **Vis koden** (`Program.cs`, `Product`, `DbContext`, controller)
+1. **Vis koden** (`src/LabApi/Program.cs`, `Product`, `DbContext`, controller)
 2. **Kjør migrasjonene**
 3. **Test med `curl`**
 4. **Publiser appen**
@@ -245,9 +252,10 @@ er Vagrant + VirtualBox et mer stabilt opplegg enn Terraform + alpha-provider fo
 ### Standard oppstart (Docker i VM)
 
 ```bash
+cd infra/vagrant
 vagrant up
 vagrant ssh
-cd /vagrant
+cd /workspace
 docker --version
 docker compose version
 ```
@@ -255,6 +263,7 @@ docker compose version
 ### Podman i stedet for Docker
 
 ```bash
+cd infra/vagrant
 CONTAINER_RUNTIME=podman vagrant up
 vagrant ssh
 podman --version
@@ -263,12 +272,14 @@ podman --version
 ### Installer begge runtimes
 
 ```bash
+cd infra/vagrant
 CONTAINER_RUNTIME=both vagrant up
 ```
 
 ### Rebuild fra scratch (cattle-test)
 
 ```bash
+cd infra/vagrant
 vagrant destroy -f
 vagrant up
 ```
@@ -279,6 +290,7 @@ NAT brukes som standard for kompatibilitet på tvers av Windows/macOS/Linux.
 Hvis du trenger bridged nettverk i tillegg, sett host-adapter før oppstart:
 
 ```bash
+cd infra/vagrant
 BRIDGE_ADAPTER="Intel(R) Ethernet Connection" vagrant up
 ```
 
@@ -286,5 +298,10 @@ På Linux kan adapter-navn ofte være `eno1`, `eth0` eller lignende.
 
 ### Relevante filer
 
-- `Vagrantfile`
-- `scripts/provision.sh`
+- `infra/vagrant/Vagrantfile`
+- `infra/vagrant/provision.sh`
+
+### Docker/Compose-filer
+
+- `infra/docker/Dockerfile`
+- `infra/docker/docker-compose.yml`
