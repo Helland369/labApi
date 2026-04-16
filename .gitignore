@@ -1,0 +1,25 @@
+# Build output
+bin/
+obj/
+publish/
+
+# User-specific files
+*.user
+*.rsuser
+*.suo
+
+# env files
+.env
+# IDE/editor folders
+.vs/
+.vscode/
+
+# Test output
+TestResults/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
